@@ -1,24 +1,34 @@
 import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import './weather-form.ts';
+import { customElement, state } from 'lit/decorators.js';
 import { APIResponse, fetchData } from './utils/fetchData.ts';
 import '@spectrum-web-components/divider/sp-divider.js';
+import './weather-form.ts';
+import './weather-results.ts';
 
 @customElement('weather-container')
 export class WeatherContainer extends LitElement {
+  @state()
   private _error = false;
+
+  @state()
   private _loaded = false;
+
+  @state()
   private _loading = false;
+
+  @state()
   private _data!: APIResponse;
 
   private async _handleSubmit(e: CustomEvent) {
     const detail = e?.detail;
     this._loaded = false;
+    this._loading = true;
     try {
       this._data = await fetchData(detail);
     } catch (e) {
       this._error = true;
     } finally {
+      console.log('loaded');
       this._loading = false;
       this._loaded = true;
     }

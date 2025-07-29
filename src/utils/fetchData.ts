@@ -80,7 +80,6 @@ export const fetchData = async (eventDetail: RequestDetail) => {
     }
   };
   const query = genQuery(queryObj);
-  console.log(query);
   const resp = await fetch(`${import.meta.env.VITE_API_URL}/graphql`, {
     method: 'POST',
     headers: {
