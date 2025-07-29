@@ -9,15 +9,15 @@ export interface RequestDetail {
   regressionDegree: number;
 }
 
-export interface TestResults {
+export interface TestRequest {
   pValue: boolean;
   significant: boolean;
   fStatistic: boolean;
 }
-export interface RegressionResults {
+export interface RegressionRequest {
   coefficients: boolean;
   rSquared: boolean;
-  testResults: TestResults;
+  testResults: TestRequest;
 }
 
 export interface HistoricalData {
@@ -27,6 +27,25 @@ export interface HistoricalData {
   precipitation?: number;
   snowfall?: number;
   maxWindSpeed?: number;
+}
+
+export interface TestResults {
+  pValue: number;
+  significant: boolean;
+  fStatistic: number;
+}
+export interface RegressionResult {
+  coefficients: number[];
+  rSquared: number;
+  testResults: TestResults;
+}
+
+export interface RegressionResults {
+  averageTemperature?: RegressionResult;
+  averageApparentTemperature?: RegressionResult;
+  precipitation?: RegressionResult;
+  snowfall?: RegressionResult;
+  maxWindSpeed?: RegressionResult;
 }
 
 export interface APIResponse {
@@ -74,7 +93,7 @@ export const fetchData = async (eventDetail: RequestDetail) => {
             }
           };
           return acc;
-        }, {} as { [key: string]: RegressionResults }),
+        }, {} as { [key: string]: RegressionRequest }),
         locationName: true
       }
     }
@@ -91,5 +110,6 @@ export const fetchData = async (eventDetail: RequestDetail) => {
     throw new Error('Failed to fetch weather data.');
   }
   const json = await resp.json();
-  return json.data as APIResponse;
+  console.log(json);
+  return json.data.weatherAnalysis as APIResponse;
 };

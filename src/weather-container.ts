@@ -36,24 +36,44 @@ export class WeatherContainer extends LitElement {
 
   render() {
     return html`<weather-form @form-submit=${this._handleSubmit}></weather-form>
-      <sp-divider></sp-divider>
       ${this._loading
-        ? html`<span>Loading...</span>`
+        ? html`<div class="weather-results">Loading...</div>`
         : this._error
-        ? html`<span class="error"
-            >An error occurred fetching weather data. Please try again
-            later.</span
-          >`
+        ? html`<div class="error weather-results">
+            An error occurred fetching weather data. Please try again later.
+          </div>`
         : this._loaded
-        ? html`<span>Loaded successfully.</span>`
-        : "Once you choose your data, you'll see results here."}`;
+        ? html`<weather-results
+            class="weather-results"
+            .data=${this._data}
+          ></weather-results>`
+        : html`<div class="weather-results">
+            Once you choose your data, you'll see results here.
+          </div>`}`;
   }
 
   static styles = css`
     :host {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       gap: 10px;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
+    weather-form,
+    .weather-results {
+      padding: 10px;
+      border: 2px solid grey;
+      border-radius: 15px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .weather-results {
+      flex-grow: 1;
     }
 
     .error {

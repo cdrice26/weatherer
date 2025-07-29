@@ -4,7 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Weatherer</title>
-    <link rel="stylesheet" href="./src/index.css" />
+    <style>
+      :root {
+        --background-color: #303030;
+        --text-color: white;
+        height: 100vh;
+        margin: 0;
+      }
+
+      html,
+      body,
+      sp-theme {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        height: 100vh;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      #root {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      #root nav {
+        padding: 10px;
+        font-size: x-large;
+      }
+    </style>
     <script type="module">
       import '@spectrum-web-components/theme/sp-theme.js';
       import '@spectrum-web-components/theme/src/themes.js';
@@ -13,7 +42,10 @@
   </head>
   <body>
     <sp-theme color="dark" scale="medium" system="spectrum" dir="ltr">
-      <weather-container></weather-container>
+      <div id="root">
+        <nav>The Weatherer</nav>
+        <weather-container></weather-container>
+      </div>
     </sp-theme>
   </body>
 </html>

@@ -1,9 +1,14 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
+import { APIResponse } from './utils/fetchData';
 
 @customElement('weather-results')
 export class WeatherResults extends LitElement {
+  @property({ type: Object })
+  data!: APIResponse;
+
   render() {
+    console.log(this.data);
     return html``;
   }
 }
