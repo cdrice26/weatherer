@@ -20,6 +20,7 @@ export class WeatherForm extends LitElement {
   @query('#average-years') averageYearsInput!: NumberField;
   @query('#start-year') startYearInput!: NumberField;
   @query('#end-year') endYearInput!: NumberField;
+  @query('#regression-degree') regressionDegreeInput!: NumberField;
 
   private _handleSubmit(e: Event) {
     e.preventDefault();
@@ -33,13 +34,15 @@ export class WeatherForm extends LitElement {
     const averageYears = this?.averageYearsInput?.value;
     const startYear = this?.startYearInput?.value;
     const endYear = this?.endYearInput?.value;
+    const regressionDegree = this.regressionDegreeInput?.value;
 
     const formValues = {
       location,
       metrics,
       averageYears,
       startYear,
-      endYear
+      endYear,
+      regressionDegree
     };
 
     this.dispatchEvent(
@@ -116,6 +119,17 @@ export class WeatherForm extends LitElement {
             .value=${DEFAULT_END_YEAR}
             .formatOptions=${{ useGrouping: false }}
             @change=${this._resetNumberInput(DEFAULT_END_YEAR)}
+          ></sp-number-field>
+        </div>
+        <div class="form-input">
+          <sp-field-label for="end-year">Regression Degree</sp-field-label>
+          <sp-number-field
+            id="regression-degree"
+            .min=${1}
+            .max=${5}
+            step="1"
+            .value=${1}
+            @change=${this._resetNumberInput(1)}
           ></sp-number-field>
         </div>
         <div class="form-input">
