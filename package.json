@@ -9,10 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@spectrum-web-components/button": "^1.7.0",
+    "@spectrum-web-components/field-label": "^1.7.0",
+    "@spectrum-web-components/number-field": "^1.7.0",
+    "@spectrum-web-components/picker": "^1.7.0",
+    "@spectrum-web-components/textfield": "^1.7.0",
+    "@spectrum-web-components/theme": "^1.7.0",
     "lit": "^2.7.6"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^7.0.6"
   }
 }
