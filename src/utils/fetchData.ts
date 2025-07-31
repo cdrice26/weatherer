@@ -1,6 +1,9 @@
-import { jsonToGraphQLQuery as genQuery } from 'json-to-graphql-query';
+import {
+  jsonToGraphQLQuery as genQuery,
+  EnumType
+} from 'json-to-graphql-query';
 
-export interface RequestDetail {
+interface RequestDetail {
   location: string;
   metrics: string[];
   averageYears: number;
@@ -9,24 +12,10 @@ export interface RequestDetail {
   regressionDegree: number;
 }
 
-export interface TestRequest {
-  pValue: boolean;
-  significant: boolean;
-  fStatistic: boolean;
-}
-export interface RegressionRequest {
-  coefficients: boolean;
-  rSquared: boolean;
-  testResults: TestRequest;
-}
-
-export interface HistoricalData {
+export interface HistoricalMetricData {
+  metric: string;
+  value: number;
   year: number;
-  averageTemperature?: number;
-  averageApparentTemperature?: number;
-  precipitation?: number;
-  snowfall?: number;
-  maxWindSpeed?: number;
 }
 
 export interface TestResults {
@@ -40,17 +29,14 @@ export interface RegressionResult {
   testResults: TestResults;
 }
 
-export interface RegressionResults {
-  averageTemperature?: RegressionResult;
-  averageApparentTemperature?: RegressionResult;
-  precipitation?: RegressionResult;
-  snowfall?: RegressionResult;
-  maxWindSpeed?: RegressionResult;
+export interface MetricRegression {
+  metric: string;
+  results: RegressionResult;
 }
 
 export interface APIResponse {
-  historicalData: HistoricalData;
-  regression: RegressionResults;
+  historicalData: HistoricalMetricData[];
+  regression: MetricRegression[];
   locationName: string;
 }
 
@@ -72,28 +58,27 @@ export const fetchData = async (eventDetail: RequestDetail) => {
             startYear,
             endYear,
             averageYears,
-            regressionDegree
+            regressionDegree,
+            metrics: metrics.map((m) => new EnumType(m))
           }
         },
         historicalData: {
           year: true,
-          ...metrics.reduce((acc, key) => {
-            acc[key] = true;
-            return acc;
-          }, {} as { [key: string]: boolean })
+          metric: true,
+          value: true
         },
-        regression: metrics.reduce((acc, key) => {
-          acc[key] = {
+        regression: {
+          metric: true,
+          results: {
             coefficients: true,
             rSquared: true,
             testResults: {
+              fStatistic: true,
               pValue: true,
-              significant: true,
-              fStatistic: true
+              significant: true
             }
-          };
-          return acc;
-        }, {} as { [key: string]: RegressionRequest }),
+          }
+        },
         locationName: true
       }
     }
@@ -110,6 +95,5 @@ export const fetchData = async (eventDetail: RequestDetail) => {
     throw new Error('Failed to fetch weather data.');
   }
   const json = await resp.json();
-  console.log(json);
   return json.data.weatherAnalysis as APIResponse;
 };

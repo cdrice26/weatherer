@@ -28,7 +28,6 @@ export class WeatherContainer extends LitElement {
     } catch (e) {
       this._error = true;
     } finally {
-      console.log('loaded');
       this._loading = false;
       this._loaded = true;
     }

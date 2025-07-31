@@ -73,15 +73,17 @@ export class WeatherForm extends LitElement {
         <div class="form-input">
           <sp-field-label for="metrics">Metrics</sp-field-label>
           <sp-field-group id="metrics">
-            <sp-checkbox data-value="averageTemperature"
+            <sp-checkbox data-value="AVERAGE_TEMPERATURE"
               >Average Temperature</sp-checkbox
             >
-            <sp-checkbox data-value="averageApparentTemperature"
+            <sp-checkbox data-value="AVERAGE_APPARENT_TEMPERATURE"
               >Average Apparent Temperature</sp-checkbox
             >
-            <sp-checkbox data-value="precipitation">Precipitation</sp-checkbox>
-            <sp-checkbox data-value="snowfall">Snowfall</sp-checkbox>
-            <sp-checkbox data-value="maxWindSpeed">Max Wind Speed</sp-checkbox>
+            <sp-checkbox data-value="PRECIPITATION">Precipitation</sp-checkbox>
+            <sp-checkbox data-value="SNOWFALL">Snowfall</sp-checkbox>
+            <sp-checkbox data-value="MAX_WIND_SPEED"
+              >Max Wind Speed</sp-checkbox
+            >
           </sp-field-group>
         </div>
         <div class="form-input">

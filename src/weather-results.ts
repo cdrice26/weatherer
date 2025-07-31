@@ -8,7 +8,6 @@ export class WeatherResults extends LitElement {
   data!: APIResponse;
 
   render() {
-    console.log(this.data);
     return html``;
   }
 }
