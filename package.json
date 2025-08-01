@@ -21,6 +21,7 @@
     "@spectrum-web-components/theme": "^1.7.0",
     "json-to-graphql-query": "^2.3.0",
     "lit": "^2.7.6",
+    "memoize-one": "^6.0.0",
     "plotly.js-dist": "^3.0.3"
   },
   "devDependencies": {

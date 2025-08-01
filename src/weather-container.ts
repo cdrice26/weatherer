@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { APIResponse, fetchData } from './utils/fetchData.ts';
+import { Data, fetchData } from './utils/fetchData.ts';
 import '@spectrum-web-components/progress-circle/sp-progress-circle.js';
 import '@spectrum-web-components/field-label/sp-field-label.js';
 import './weather-form.ts';
@@ -18,10 +18,14 @@ export class WeatherContainer extends LitElement {
   private _loading = false;
 
   @state()
-  private _data!: APIResponse[];
+  private _data!: Data[];
+
+  @state()
+  private _averageYears!: number;
 
   private async _handleSubmit(e: CustomEvent) {
     const detail = e?.detail;
+    this._averageYears = detail.averageYears;
     this._loaded = false;
     this._loading = true;
     try {
@@ -48,15 +52,16 @@ export class WeatherContainer extends LitElement {
             ></sp-progress-circle>
           </div>`
         : this._error
-        ? html`<div class="error weather-results">
+        ? html`<div class="error weather-results centered">
             An error occurred fetching weather data. Please try again later.
           </div>`
         : this._loaded
         ? html`<weather-results
             class="weather-results"
             .data=${this._data}
+            .averageYears=${this._averageYears}
           ></weather-results>`
-        : html`<div class="weather-results">
+        : html`<div class="weather-results centered">
             Once you choose your data, you'll see results here.
           </div>`}`;
   }

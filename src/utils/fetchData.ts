@@ -2,6 +2,7 @@ import {
   jsonToGraphQLQuery as genQuery,
   EnumType
 } from 'json-to-graphql-query';
+import memoizeOne from 'memoize-one';
 
 interface RequestDetail {
   location: string;
@@ -48,6 +49,32 @@ export interface APIResponse {
   regression: MetricRegression[];
   locationName: string;
 }
+
+export interface MetricData {
+  metric: string;
+  days: HistoricalMetricData[];
+  regression: MetricRegression;
+}
+
+export interface Data {
+  location: string;
+  weather: MetricData[];
+}
+
+export const organizeData = memoizeOne((data: APIResponse[]): Data[] => {
+  const locations = data.map((data) => data.locationName);
+  const metrics = [...new Set(data[0].historicalData.map((day) => day.metric))];
+  return locations.map((location, index) => ({
+    location,
+    weather: metrics.map((metric) => ({
+      metric,
+      days: data[index].historicalData.filter((day) => day.metric === metric),
+      regression: data[index].regression.find(
+        (regression) => regression.metric === metric
+      )!
+    }))
+  }));
+});
 
 export const fetchOneLocation = async (eventDetail: RequestDetail) => {
   const {
@@ -112,5 +139,12 @@ export const fetchData = async (eventDetail: RequestsDetail) => {
     async (location) => await fetchOneLocation({ ...eventDetail, location })
   );
   const results = await Promise.all(promises);
-  return results;
+  return organizeData(results);
+};
+
+export const getUnit = (metric: string) => {
+  if (metric.includes('TEMPERATURE')) return '°F';
+  else if (metric.includes('PRECIPITATION') || metric.includes('SNOWFALL'))
+    return 'in';
+  else return 'mph';
 };
