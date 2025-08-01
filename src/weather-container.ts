@@ -55,11 +55,16 @@ export class WeatherContainer extends LitElement {
     :host {
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
       gap: 10px;
       height: 100%;
       box-sizing: border-box;
       padding: 10px;
+
+      /* Responsive layout switch */
+      @media (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+      }
     }
 
     weather-form,
@@ -67,8 +72,20 @@ export class WeatherContainer extends LitElement {
       padding: 10px;
       border: 2px solid grey;
       border-radius: 15px;
-      height: 100%;
       box-sizing: border-box;
+      flex: 1 1 45%;
+      height: 100%;
+      overflow: auto; /* enables independent scrolling */
+    }
+
+    @media (max-width: 768px) {
+      weather-form,
+      .weather-results {
+        flex: none;
+        width: 100%;
+        height: unset;
+        overflow: visible; /* default scrolling behavior */
+      }
     }
 
     .weather-results {

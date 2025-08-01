@@ -15,7 +15,7 @@ interface RequestDetail {
 export interface HistoricalMetricData {
   metric: string;
   value: number;
-  year: number;
+  date: Date;
 }
 
 export interface TestResults {
@@ -63,7 +63,7 @@ export const fetchData = async (eventDetail: RequestDetail) => {
           }
         },
         historicalData: {
-          year: true,
+          date: true,
           metric: true,
           value: true
         },

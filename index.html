@@ -26,12 +26,22 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: start;
+        overflow: hidden;
       }
 
       #root nav {
         padding: 10px;
         font-size: x-large;
+      }
+
+      #root > weather-container {
+        flex-grow: 1;
+        height: 100%;
+        overflow: hidden;
+        @media (max-width: 768px) {
+          overflow: auto;
+        }
       }
     </style>
     <script type="module">
