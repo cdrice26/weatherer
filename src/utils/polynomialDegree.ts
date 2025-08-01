@@ -10,5 +10,7 @@ export const getDegreeText = (degree: number) => {
       return 'quartic';
     case 5:
       return 'quintic';
+    default:
+      return `${degree}-th degree polynomial`;
   }
 };
