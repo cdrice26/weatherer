@@ -2,6 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Data } from './utils/fetchData.ts';
 import './regression-results.ts';
+import './weather-chart.ts';
 
 @customElement('metric-results')
 export class MetricResults extends LitElement {
@@ -16,8 +17,19 @@ export class MetricResults extends LitElement {
 
   render() {
     return html`
-      <h1>Temperature</h1>
+      <h1>
+        ${this.metric === 'temp'
+          ? 'Temperature'
+          : this.metric === 'precip'
+          ? 'Precipitation'
+          : 'Wind'}
+      </h1>
       <h2>Chart</h2>
+      <weather-chart
+        .metric=${this.metric}
+        .data=${this.data}
+        .averageYears=${this.averageYears}
+      ></weather-chart>
       <h2>Regression</h2>
       <regression-results
         .metric=${this.metric}

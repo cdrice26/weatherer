@@ -1,6 +1,11 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Data, getUnit } from './utils/fetchData';
+import { Data } from './utils/fetchData';
+import {
+  getMetricFilter,
+  getMetricName as getMetricNameExt,
+  getUnit
+} from './utils/getters';
 import { getDegreeText } from './utils/polynomialDegree';
 
 @customElement('regression-results')
@@ -14,22 +19,9 @@ export class RegressionResults extends LitElement {
   @property({ type: String })
   metric!: string;
 
-  metricFilter = (metric: string) => {
-    if (this.metric === 'temp') {
-      return metric.includes('TEMP');
-    }
-    if (this.metric === 'precip') {
-      return metric.includes('PRECIP') || metric.includes('SNOW');
-    }
-    if (this.metric === 'wind') {
-      return metric.includes('WIND');
-    }
-  };
+  metricFilter = getMetricFilter(() => this.metric);
 
-  getMetricName = (metric: string, location: string) =>
-    `${metric.replaceAll('_', ' ').toLocaleLowerCase()} in ${location} (${
-      this.averageYears
-    }-year moving average)`;
+  getMetricName = getMetricNameExt(() => this.averageYears);
 
   render() {
     return this.data.map((location) =>
@@ -41,7 +33,7 @@ export class RegressionResults extends LitElement {
               The ${this.getMetricName(metric, location.location)} is
               ${(regression.results.coefficients.at(-1) ?? 0) > 0
                 ? 'increasing'
-                : 'Decreasing'}
+                : 'decreasing'}
               ${regression.results.coefficients.length === 2
                 ? ` at a rate of ${regression.results.coefficients[1]}${getUnit(
                     metric

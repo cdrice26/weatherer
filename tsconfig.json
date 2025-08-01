@@ -18,7 +18,12 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "plotly.js-dist": ["node_modules/@types/plotly.js/index.d.ts"]
+    }
   },
   "include": ["src"]
 }

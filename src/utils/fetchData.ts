@@ -128,6 +128,7 @@ export const fetchOneLocation = async (eventDetail: RequestDetail) => {
     body: JSON.stringify({ query })
   });
   if (!resp.ok) {
+    console.log(await resp.json());
     throw new Error('Failed to fetch weather data.');
   }
   const json = await resp.json();
@@ -140,11 +141,4 @@ export const fetchData = async (eventDetail: RequestsDetail) => {
   );
   const results = await Promise.all(promises);
   return organizeData(results);
-};
-
-export const getUnit = (metric: string) => {
-  if (metric.includes('TEMPERATURE')) return '°F';
-  else if (metric.includes('PRECIPITATION') || metric.includes('SNOWFALL'))
-    return 'in';
-  else return 'mph';
 };
