@@ -1,7 +1,8 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { APIResponse, fetchData } from './utils/fetchData.ts';
-import '@spectrum-web-components/divider/sp-divider.js';
+import '@spectrum-web-components/progress-circle/sp-progress-circle.js';
+import '@spectrum-web-components/field-label/sp-field-label.js';
 import './weather-form.ts';
 import './weather-results.ts';
 
@@ -36,7 +37,16 @@ export class WeatherContainer extends LitElement {
   render() {
     return html`<weather-form @form-submit=${this._handleSubmit}></weather-form>
       ${this._loading
-        ? html`<div class="weather-results">Loading...</div>`
+        ? html`<div class="weather-results centered">
+            <sp-field-label for="loading-circle"
+              >Crunching numbers. This might take several
+              seconds.</sp-field-label
+            >
+            <sp-progress-circle
+              id="loading-circle"
+              indeterminate
+            ></sp-progress-circle>
+          </div>`
         : this._error
         ? html`<div class="error weather-results">
             An error occurred fetching weather data. Please try again later.
@@ -65,6 +75,14 @@ export class WeatherContainer extends LitElement {
         flex-direction: column;
         height: auto;
       }
+    }
+
+    .centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
     }
 
     weather-form,
