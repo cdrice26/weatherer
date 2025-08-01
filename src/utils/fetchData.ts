@@ -12,6 +12,15 @@ interface RequestDetail {
   regressionDegree: number;
 }
 
+interface RequestsDetail {
+  locations: string[];
+  metrics: string[];
+  averageYears: number;
+  startYear: number;
+  endYear: number;
+  regressionDegree: number;
+}
+
 export interface HistoricalMetricData {
   metric: string;
   value: number;
@@ -40,7 +49,7 @@ export interface APIResponse {
   locationName: string;
 }
 
-export const fetchData = async (eventDetail: RequestDetail) => {
+export const fetchOneLocation = async (eventDetail: RequestDetail) => {
   const {
     location,
     metrics,
@@ -96,4 +105,12 @@ export const fetchData = async (eventDetail: RequestDetail) => {
   }
   const json = await resp.json();
   return json.data.weatherAnalysis as APIResponse;
+};
+
+export const fetchData = async (eventDetail: RequestsDetail) => {
+  const promises = eventDetail.locations.map(
+    async (location) => await fetchOneLocation({ ...eventDetail, location })
+  );
+  const results = await Promise.all(promises);
+  return results;
 };

@@ -4,8 +4,8 @@ import { APIResponse } from './utils/fetchData';
 
 @customElement('weather-results')
 export class WeatherResults extends LitElement {
-  @property({ type: Object })
-  data!: APIResponse;
+  @property({ type: Array })
+  data!: APIResponse[];
 
   render() {
     return html``;

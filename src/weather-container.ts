@@ -17,7 +17,7 @@ export class WeatherContainer extends LitElement {
   private _loading = false;
 
   @state()
-  private _data!: APIResponse;
+  private _data!: APIResponse[];
 
   private async _handleSubmit(e: CustomEvent) {
     const detail = e?.detail;

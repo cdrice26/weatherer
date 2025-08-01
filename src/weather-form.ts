@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { Textfield } from '@spectrum-web-components/textfield';
 import { NumberField } from '@spectrum-web-components/number-field';
 import '@spectrum-web-components/textfield/sp-textfield.js';
@@ -15,17 +15,22 @@ const DEFAULT_START_YEAR = DEFAULT_END_YEAR - 30;
 
 @customElement('weather-form')
 export class WeatherForm extends LitElement {
-  @query('#location') locationInput!: Textfield;
   @query('#metrics') metricInput!: FieldGroup;
   @query('#average-years') averageYearsInput!: NumberField;
   @query('#start-year') startYearInput!: NumberField;
   @query('#end-year') endYearInput!: NumberField;
   @query('#regression-degree') regressionDegreeInput!: NumberField;
 
+  @state()
+  private locations: { id: number; value: string }[] = [
+    { id: Date.now(), value: '' }
+  ];
+
   private _handleSubmit(e: Event) {
     e.preventDefault();
 
-    const location = this?.locationInput?.value;
+    const locations = this.locations.map((loc) => loc.value);
+
     const metrics = Array.from(
       this?.metricInput?.getElementsByTagName('sp-checkbox')
     )
@@ -37,7 +42,7 @@ export class WeatherForm extends LitElement {
     const regressionDegree = this.regressionDegreeInput?.value;
 
     const formValues = {
-      location,
+      locations,
       metrics,
       averageYears,
       startYear,
@@ -63,13 +68,54 @@ export class WeatherForm extends LitElement {
     };
   }
 
+  private _addLocation() {
+    this.locations = [...this.locations, { id: Date.now(), value: '' }];
+  }
+
+  private _removeLocation(id: number) {
+    this.locations = this.locations.filter((loc) => loc.id !== id);
+  }
+
+  private _updateLocationValue(id: number, e: InputEvent) {
+    const input = e.target as Textfield;
+    this.locations = this.locations.map((loc) =>
+      loc.id === id ? { ...loc, value: input.value } : loc
+    );
+  }
+
   render() {
     return html`
       <form @submit=${this._handleSubmit}>
-        <div class="form-input">
-          <sp-field-label for="location">Location</sp-field-label>
-          <sp-textfield id="location"></sp-textfield>
-        </div>
+        ${this.locations.map(
+          (loc, index) => html`
+            <div class="form-input location-wrapper">
+              <sp-field-label for="loc-${loc.id}"
+                >Location ${index + 1}</sp-field-label
+              >
+              <div>
+                <sp-textfield
+                  id="loc-${loc.id}"
+                  class="location-input"
+                  .value=${loc.value}
+                  @input=${(e: InputEvent) =>
+                    this._updateLocationValue(loc.id, e)}
+                ></sp-textfield>
+                ${this.locations.length > 1
+                  ? html`
+                      <sp-button
+                        variant="secondary"
+                        @click=${() => this._removeLocation(loc.id)}
+                        >Remove</sp-button
+                      >
+                    `
+                  : null}
+              </div>
+            </div>
+          `
+        )}
+        <sp-button @click=${this._addLocation} variant="accent"
+          >Add Location</sp-button
+        >
         <div class="form-input">
           <sp-field-label for="metrics">Metrics</sp-field-label>
           <sp-field-group id="metrics">
