@@ -7,6 +7,7 @@ import {
 } from './utils/getters.ts';
 import { Layout, Data as PlotlyData, PlotlyHTMLElement } from 'plotly.js-dist';
 import Plotly from 'plotly.js-dist';
+import { asDate } from './utils/dateUtils.ts';
 
 const getRandomColor = () =>
   '#' +
@@ -63,7 +64,7 @@ export class WeatherChart extends LitElement {
 
           return [
             {
-              x: metricData.map((day) => new Date(day.date)),
+              x: metricData.map((day) => asDate(day.date)),
               y: metricData.map((day) => day.value),
               mode: 'line',
               type: 'scatter',
@@ -74,12 +75,12 @@ export class WeatherChart extends LitElement {
               }
             },
             {
-              x: metricData.map((day) => new Date(day.date)),
+              x: metricData.map((day) => asDate(day.date)),
               y: metricData
                 .map(
                   (day) =>
-                    (new Date(day.date).getTime() -
-                      new Date(regression.baseDate).getTime()) /
+                    (asDate(day.date).getTime() -
+                      asDate(regression.baseDate).getTime()) /
                     (1000 * 60 * 60 * 24)
                 )
                 .map(f),
