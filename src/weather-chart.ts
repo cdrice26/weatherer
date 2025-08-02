@@ -61,14 +61,15 @@ export class WeatherChart extends LitElement {
             {
               x: metricData.map((day) => new Date(day.date)),
               y: metricData.map((day) => day.value),
-              mode: 'markers',
+              mode: 'line',
               type: 'scatter',
               name: this.getMetricName(thisMetric, location.location),
-              marker: {
+              line: {
                 color:
                   TRACE_COLORS[
                     (locationIndex + weatherIndex) % TRACE_COLORS.length
-                  ]
+                  ],
+                width: 2
               }
             },
             {
@@ -86,11 +87,12 @@ export class WeatherChart extends LitElement {
               name:
                 this.getMetricName(thisMetric, location.location) +
                 ' (Regression)',
-              marker: {
+              line: {
                 color:
                   TRACE_COLORS[
                     (locationIndex + weatherIndex) % TRACE_COLORS.length
-                  ]
+                  ],
+                width: 4
               }
             }
           ];
@@ -108,7 +110,7 @@ export class WeatherChart extends LitElement {
       if (fullData) {
         this.legendData = fullData.map((trace: any) => ({
           name: trace.name,
-          color: trace.marker?.color || '#ccc'
+          color: trace.line?.color || '#ccc'
         }));
       }
     });
