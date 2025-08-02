@@ -21,6 +21,12 @@ const TRACE_COLORS = [
   '#17becf'
 ];
 
+const getEvaluator = (coefficients: number[]) => (x: number) =>
+  coefficients.reduce(
+    (acc, coeff, index) => acc + coeff * Math.pow(x, index),
+    0
+  );
+
 @customElement('weather-chart')
 export class WeatherChart extends LitElement {
   @property({ type: Array })
@@ -44,24 +50,29 @@ export class WeatherChart extends LitElement {
     const traces = this.data.flatMap((location, locationIndex) =>
       location.weather
         .filter((weather) => this.metricFilter(weather.metric))
-        .map((weather, weatherIndex) => {
+        .flatMap((weather, weatherIndex) => {
           const thisMetric = weather.metric;
           const metricData = weather.days.filter((day) =>
             this.metricFilter(day.metric)
           );
-          return {
-            x: metricData.map((day) => new Date(day.date)),
-            y: metricData.map((day) => day.value),
-            mode: 'markers',
-            type: 'scatter',
-            name: this.getMetricName(thisMetric, location.location),
-            marker: {
-              color:
-                TRACE_COLORS[
-                  (locationIndex + weatherIndex) % TRACE_COLORS.length
-                ]
-            }
-          };
+          const regression = weather.regression.results;
+          const f = getEvaluator(regression.coefficients);
+          return [
+            {
+              x: metricData.map((day) => new Date(day.date)),
+              y: metricData.map((day) => day.value),
+              mode: 'markers',
+              type: 'scatter',
+              name: this.getMetricName(thisMetric, location.location),
+              marker: {
+                color:
+                  TRACE_COLORS[
+                    (locationIndex + weatherIndex) % TRACE_COLORS.length
+                  ]
+              }
+            },
+            {}
+          ];
         })
     );
     const layout = {

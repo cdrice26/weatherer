@@ -14,7 +14,7 @@ export const getMetricFilter =
 export const getUnit = (metric: string) => {
   if (metric.includes('TEMPERATURE')) return '°F';
   else if (metric.includes('PRECIPITATION') || metric.includes('SNOWFALL'))
-    return 'in';
+    return 'in/day';
   else return 'mph';
 };
 
@@ -22,4 +22,6 @@ export const getMetricName =
   (thisAverageYears: () => number) => (metric: string, location: string) =>
     `${metric
       .replaceAll('_', ' ')
-      .toLocaleLowerCase()} in ${location} (${thisAverageYears()}-year moving average)`;
+      .toLocaleLowerCase()} in ${location} (${thisAverageYears()}-year moving average) (${getUnit(
+      metric
+    )})`;
