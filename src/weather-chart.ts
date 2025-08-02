@@ -8,24 +8,11 @@ import {
 import { Layout, Data as PlotlyData, PlotlyHTMLElement } from 'plotly.js-dist';
 import Plotly from 'plotly.js-dist';
 
-const TRACE_COLORS = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf'
-];
-
-const getEvaluator = (coefficients: number[]) => (x: number) =>
-  coefficients.reduce(
-    (acc, coeff, index) => acc + coeff * Math.pow(x, index),
-    0
-  );
+const getRandomColor = () =>
+  '#' +
+  Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, '0');
 
 @customElement('weather-chart')
 export class WeatherChart extends LitElement {
@@ -41,22 +28,39 @@ export class WeatherChart extends LitElement {
   @state()
   legendData: { name: string; color: string }[] = [];
 
+  private colorMap = new Map<string, string>();
+
   metricFilter = getMetricFilter(() => this.metric);
   getMetricName = getMetricNameExt(() => this.averageYears);
 
   renderChart = () => {
     const chartId = this.metric + '-chart';
     const chartDiv = this.shadowRoot?.getElementById(chartId);
-    const traces = this.data.flatMap((location, locationIndex) =>
+
+    const traces = this.data.flatMap((location) =>
       location.weather
         .filter((weather) => this.metricFilter(weather.metric))
-        .flatMap((weather, weatherIndex) => {
+        .flatMap((weather) => {
           const thisMetric = weather.metric;
+          const traceKey = `${location.location}-${thisMetric}`;
+
+          // Assign unique color if not already set
+          if (!this.colorMap.has(traceKey)) {
+            this.colorMap.set(traceKey, getRandomColor());
+          }
+
+          const color = this.colorMap.get(traceKey)!;
           const metricData = weather.days.filter((day) =>
             this.metricFilter(day.metric)
           );
+
           const regression = weather.regression.results;
-          const f = getEvaluator(regression.coefficients);
+          const f = (x: number) =>
+            regression.coefficients.reduce(
+              (acc, coeff, index) => acc + coeff * Math.pow(x, index),
+              0
+            );
+
           return [
             {
               x: metricData.map((day) => new Date(day.date)),
@@ -65,10 +69,7 @@ export class WeatherChart extends LitElement {
               type: 'scatter',
               name: this.getMetricName(thisMetric, location.location),
               line: {
-                color:
-                  TRACE_COLORS[
-                    (locationIndex + weatherIndex) % TRACE_COLORS.length
-                  ],
+                color,
                 width: 2
               }
             },
@@ -88,24 +89,24 @@ export class WeatherChart extends LitElement {
                 this.getMetricName(thisMetric, location.location) +
                 ' (Regression)',
               line: {
-                color:
-                  TRACE_COLORS[
-                    (locationIndex + weatherIndex) % TRACE_COLORS.length
-                  ],
+                color,
                 width: 4
               }
             }
           ];
         })
     );
-    const layout = {
+
+    const layout: Partial<Layout> = {
       showlegend: false
     };
-    Plotly.react(chartDiv!, traces as PlotlyData[], layout as Layout, {
+
+    Plotly.react(chartDiv!, traces as PlotlyData[], layout, {
       responsive: true
     });
+
     requestAnimationFrame(() => {
-      const fullData = (chartDiv as PlotlyHTMLElement)?.data; // Plotly attaches this
+      const fullData = (chartDiv as PlotlyHTMLElement)?.data;
 
       if (fullData) {
         this.legendData = fullData.map((trace: any) => ({
@@ -121,7 +122,8 @@ export class WeatherChart extends LitElement {
   }
 
   render() {
-    return html`<div
+    return html`
+      <div
         class="chart"
         id=${this.metric + '-chart'}
         style="height: 400px"
@@ -138,7 +140,8 @@ export class WeatherChart extends LitElement {
             </div>
           `
         )}
-      </div>`;
+      </div>
+    `;
   }
 
   static styles = css`
