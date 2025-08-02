@@ -36,9 +36,9 @@ export class RegressionResults extends LitElement {
                 : 'decreasing'}
               in the most recent
               years${regression.results.coefficients.length === 2
-                ? ` at a rate of ${regression.results.coefficients[1]}${getUnit(
-                    metric
-                  )} per year`
+                ? ` at a rate of ${
+                    regression.results.coefficients[1] * 365.25
+                  }${getUnit(metric)} per year`
                 : ''}.
               This change is
               ${regression.results.testResults.significant
