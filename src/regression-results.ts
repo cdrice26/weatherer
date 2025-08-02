@@ -39,7 +39,7 @@ export class RegressionResults extends LitElement {
                     regression.results.coefficients[1] * 365.25
                   )}${getUnit(metric)} per year`
                 : 'in the most recent years'}.
-              This relationship is
+              This relationship between the metric and the date is
               ${regression.results.testResults.significant
                 ? ''
                 : 'not '}statistically
