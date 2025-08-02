@@ -25,7 +25,7 @@ interface RequestsDetail {
 export interface HistoricalMetricData {
   metric: string;
   value: number;
-  date: Date;
+  date: string;
 }
 
 export interface TestResults {
@@ -37,6 +37,7 @@ export interface RegressionResult {
   coefficients: number[];
   rSquared: number;
   testResults: TestResults;
+  baseDate: string;
 }
 
 export interface MetricRegression {
@@ -108,6 +109,7 @@ export const fetchOneLocation = async (eventDetail: RequestDetail) => {
           results: {
             coefficients: true,
             rSquared: true,
+            baseDate: true,
             testResults: {
               fStatistic: true,
               pValue: true,

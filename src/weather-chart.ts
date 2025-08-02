@@ -71,7 +71,28 @@ export class WeatherChart extends LitElement {
                   ]
               }
             },
-            {}
+            {
+              x: metricData.map((day) => new Date(day.date)),
+              y: metricData
+                .map(
+                  (day) =>
+                    (new Date(day.date).getTime() -
+                      new Date(regression.baseDate).getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )
+                .map(f),
+              mode: 'line',
+              type: 'scatter',
+              name:
+                this.getMetricName(thisMetric, location.location) +
+                ' (Regression)',
+              marker: {
+                color:
+                  TRACE_COLORS[
+                    (locationIndex + weatherIndex) % TRACE_COLORS.length
+                  ]
+              }
+            }
           ];
         })
     );

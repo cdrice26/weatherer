@@ -33,8 +33,7 @@ export class RegressionResults extends LitElement {
               The ${this.getMetricName(metric, location.location)} is
               ${(regression.results.coefficients.at(-1) ?? 0) > 0
                 ? 'increasing'
-                : 'decreasing'}
-              ${regression.results.coefficients.length === 2
+                : 'decreasing'}${regression.results.coefficients.length === 2
                 ? ` at a rate of ${regression.results.coefficients[1]}${getUnit(
                     metric
                   )} per year`
