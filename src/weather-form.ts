@@ -13,6 +13,23 @@ import { FieldGroup } from '@spectrum-web-components/field-group';
 const DEFAULT_END_YEAR = new Date().getFullYear() - 1;
 const DEFAULT_START_YEAR = DEFAULT_END_YEAR - 30;
 
+/**
+ * A web component for configuring a weather analysis query.
+ * Allows users to input multiple locations, select metrics, and specify regression parameters.
+ *
+ * @element weather-form
+ *
+ * @query {FieldGroup} metricInput - The container holding metric checkboxes
+ * @query {NumberField} averageYearsInput - Field for moving average duration
+ * @query {NumberField} startYearInput - Field for query start year
+ * @query {NumberField} endYearInput - Field for query end year
+ * @query {NumberField} regressionDegreeInput - Field for regression polynomial degree
+ *
+ * @state {Array<{id: number, value: string}>} locations - List of location text inputs
+ *
+ * Events:
+ * - Dispatches 'form-submit' with user-selected parameters when the form is submitted
+ */
 @customElement('weather-form')
 export class WeatherForm extends LitElement {
   @query('#metrics') metricInput!: FieldGroup;
@@ -21,11 +38,18 @@ export class WeatherForm extends LitElement {
   @query('#end-year') endYearInput!: NumberField;
   @query('#regression-degree') regressionDegreeInput!: NumberField;
 
+  /** Holds selected weather locations */
   @state()
   private locations: { id: number; value: string }[] = [
     { id: Date.now(), value: '' }
   ];
 
+  /**
+   * Handles submission of the form by extracting input values
+   * and dispatching a 'form-submit' event.
+   *
+   * @param e - The submit event
+   */
   private _handleSubmit(e: Event) {
     e.preventDefault();
 
@@ -59,6 +83,12 @@ export class WeatherForm extends LitElement {
     );
   }
 
+  /**
+   * Ensures number fields fall back to default if cleared or invalid.
+   *
+   * @param defaultValue - Default value to restore
+   * @returns Event handler for keyboard interaction
+   */
   private _resetNumberInput(defaultValue: number) {
     return (e: KeyboardEvent) => {
       const target = e?.target as NumberField;
@@ -68,14 +98,28 @@ export class WeatherForm extends LitElement {
     };
   }
 
+  /**
+   * Adds a new location input field to the form.
+   */
   private _addLocation() {
     this.locations = [...this.locations, { id: Date.now(), value: '' }];
   }
 
+  /**
+   * Removes a location field from the form.
+   *
+   * @param id - ID of the location entry to remove
+   */
   private _removeLocation(id: number) {
     this.locations = this.locations.filter((loc) => loc.id !== id);
   }
 
+  /**
+   * Updates the text value of a location input field.
+   *
+   * @param id - ID of the location entry
+   * @param e - Input event from text field
+   */
   private _updateLocationValue(id: number, e: InputEvent) {
     const input = e.target as Textfield;
     this.locations = this.locations.map((loc) =>

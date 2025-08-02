@@ -6,23 +6,51 @@ import '@spectrum-web-components/field-label/sp-field-label.js';
 import './weather-form.ts';
 import './weather-results.ts';
 
+/**
+ * A container component that orchestrates the weather data workflow:
+ * - Presents the input form to select parameters
+ * - Fetches and stores weather analysis data
+ * - Handles loading, error, and result display states
+ *
+ * @element weather-container
+ */
 @customElement('weather-container')
 export class WeatherContainer extends LitElement {
+  /**
+   * Indicates if an error occurred during data fetch.
+   */
   @state()
   private _error = false;
 
+  /**
+   * Tracks whether data has been successfully loaded.
+   */
   @state()
   private _loaded = false;
 
+  /**
+   * Whether a request is in progress.
+   */
   @state()
   private _loading = false;
 
+  /**
+   * Holds the fetched weather and regression data.
+   */
   @state()
   private _data!: Data[];
 
+  /**
+   * Tracks the number of years used in averaging—passed to child components.
+   */
   @state()
   private _averageYears!: number;
 
+  /**
+   * Handles form submission by initiating data fetch and updating state.
+   *
+   * @param e - Custom event emitted from `<weather-form>`
+   */
   private async _handleSubmit(e: CustomEvent) {
     const detail = e?.detail;
     this._averageYears = detail.averageYears;
