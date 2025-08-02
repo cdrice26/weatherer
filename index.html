@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.png" />
     <title>The Weatherer</title>
     <style>
       :root {
@@ -33,6 +34,9 @@
       #root nav {
         padding: 10px;
         font-size: x-large;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
 
       #root > weather-container {
@@ -53,7 +57,10 @@
   <body>
     <sp-theme color="dark" scale="medium" system="spectrum" dir="ltr">
       <div id="root">
-        <nav>The Weatherer</nav>
+        <nav>
+          <img src="/favicon.png" alt="logo" width="40px" height="40px" />The
+          Weatherer
+        </nav>
         <weather-container></weather-container>
       </div>
     </sp-theme>
