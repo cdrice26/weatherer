@@ -14,3 +14,6 @@ export const getDegreeText = (degree: number) => {
       return `${degree}-th degree polynomial`;
   }
 };
+
+export const toNearestThousandth = (num: number) =>
+  Math.round(num * 1000) / 1000;

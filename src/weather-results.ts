@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Data } from './utils/fetchData';
+import { Data } from './utils/fetchData.ts';
 import './metric-results.ts';
 
 @customElement('weather-results')

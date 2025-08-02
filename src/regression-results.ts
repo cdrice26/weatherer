@@ -6,7 +6,7 @@ import {
   getMetricName as getMetricNameExt,
   getUnit
 } from './utils/getters';
-import { getDegreeText } from './utils/polynomialDegree';
+import { getDegreeText, toNearestThousandth } from './utils/resultParser';
 
 @customElement('regression-results')
 export class RegressionResults extends LitElement {
@@ -35,19 +35,19 @@ export class RegressionResults extends LitElement {
                 ? 'increasing'
                 : 'decreasing'}
               ${regression.results.coefficients.length === 2
-                ? `at a rate of ${
+                ? `at a rate of ${toNearestThousandth(
                     regression.results.coefficients[1] * 365.25
-                  }${getUnit(metric)} per year`
+                  )}${getUnit(metric)} per year`
                 : 'in the most recent years'}.
               This relationship is
               ${regression.results.testResults.significant
                 ? ''
                 : 'not '}statistically
               significant with a P-Value of
-              ${regression.results.testResults.pValue}.
-              ${regression.results.rSquared * 100}% of the variation in
-              ${this.getMetricName(metric, location.location)} can be explained
-              by the
+              ${toNearestThousandth(regression.results.testResults.pValue)}.
+              ${toNearestThousandth(regression.results.rSquared * 100)}% of the
+              variation in ${this.getMetricName(metric, location.location)} can
+              be explained by the
               ${getDegreeText(regression.results.coefficients.length - 1)}
               relationship with the date.
             </p>
