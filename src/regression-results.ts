@@ -34,13 +34,12 @@ export class RegressionResults extends LitElement {
               ${(regression.results.coefficients.at(-1) ?? 0) > 0
                 ? 'increasing'
                 : 'decreasing'}
-              in the most recent
-              years${regression.results.coefficients.length === 2
-                ? ` at a rate of ${
+              ${regression.results.coefficients.length === 2
+                ? `at a rate of ${
                     regression.results.coefficients[1] * 365.25
                   }${getUnit(metric)} per year`
-                : ''}.
-              This change is
+                : 'in the most recent years'}.
+              This relationship is
               ${regression.results.testResults.significant
                 ? ''
                 : 'not '}statistically
