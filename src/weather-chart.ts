@@ -163,7 +163,8 @@ export class WeatherChart extends LitElement {
     );
 
     const layout: Partial<Layout> = {
-      showlegend: false
+      showlegend: false,
+      hoverlabel: { bgcolor: 'transparent', font: { color: 'transparent' } }
     };
 
     Plotly.react(chartDiv!, traces as PlotlyData[], layout, {
@@ -220,6 +221,12 @@ export class WeatherChart extends LitElement {
   }
 
   static styles = css`
+    .chart {
+      height: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+
     .custom-legend {
       display: flex;
       flex-wrap: wrap;
@@ -238,6 +245,10 @@ export class WeatherChart extends LitElement {
       height: 12px;
       border-radius: 2px;
       margin-right: 6px;
+    }
+
+    .chart {
+      display: block;
     }
   `;
 }

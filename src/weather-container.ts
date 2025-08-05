@@ -124,7 +124,7 @@ export class WeatherContainer extends LitElement {
       border: 2px solid grey;
       border-radius: 15px;
       box-sizing: border-box;
-      flex: 1 1 45%;
+      flex: 1;
       height: 100%;
       overflow: auto; /* enables independent scrolling */
     }
