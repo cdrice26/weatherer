@@ -100,6 +100,26 @@ export class WeatherChart extends LitElement {
               0
             );
 
+          const futureDays = 365 * 20;
+          const futureStep = 30; // days between each prediction point
+
+          const extendedDates = Array.from(
+            { length: futureDays / futureStep },
+            (_, i) => {
+              const daysToAdd = (i + 1) * futureStep;
+              const futureDate = new Date(asDate(metricData.at(-1)!.date));
+              futureDate.setDate(futureDate.getDate() + daysToAdd);
+              return futureDate;
+            }
+          );
+
+          const extendedValues = extendedDates.map((date) => {
+            const daysSinceBase =
+              (date.getTime() - asDate(regression.baseDate).getTime()) /
+              (1000 * 60 * 60 * 24);
+            return f(daysSinceBase);
+          });
+
           return [
             {
               x: metricData.map((day) => asDate(day.date)),
@@ -113,15 +133,21 @@ export class WeatherChart extends LitElement {
               }
             },
             {
-              x: metricData.map((day) => asDate(day.date)),
-              y: metricData
-                .map(
-                  (day) =>
-                    (asDate(day.date).getTime() -
-                      asDate(regression.baseDate).getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )
-                .map(f),
+              x: [
+                ...metricData.map((day) => asDate(day.date)),
+                ...extendedDates
+              ],
+              y: [
+                ...metricData
+                  .map(
+                    (day) =>
+                      (asDate(day.date).getTime() -
+                        asDate(regression.baseDate).getTime()) /
+                      (1000 * 60 * 60 * 24)
+                  )
+                  .map(f),
+                ...extendedValues
+              ],
               mode: 'line',
               type: 'scatter',
               name:
@@ -160,8 +186,14 @@ export class WeatherChart extends LitElement {
    * Lifecycle hook that runs after property updates.
    * Re-renders the chart on each update.
    */
-  updated() {
-    requestAnimationFrame(this.renderChart);
+  updated(changedProperties: Map<string | number | symbol, unknown>) {
+    if (
+      changedProperties.has('data') ||
+      changedProperties.has('metric') ||
+      changedProperties.has('averageYears')
+    ) {
+      requestAnimationFrame(() => this.renderChart());
+    }
   }
 
   render() {
