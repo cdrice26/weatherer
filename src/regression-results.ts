@@ -76,7 +76,7 @@ export class RegressionResults extends LitElement {
               ${regression.results.testResults.significant
                 ? ''
                 : 'not '}statistically
-              significant with a P-Value of
+              significant at the 0.05 significance level with a P-Value of
               ${toNearestThousandth(regression.results.testResults.pValue)}.
               ${toNearestThousandth(regression.results.rSquared * 100)}% of the
               variation in ${this.getMetricName(metric, location.location)} can
