@@ -235,7 +235,7 @@ export class WeatherForm extends LitElement {
         <p>The data is provided by <a href=https://open-meteo.com>Open-Meteo</a> and the 
           <a href=https://climate.copernicus.eu/>Copernicus Climate Change Service</a>.
           For more info, see <a href='/citations.txt'>citations.txt</a>. 
-          We also use several open-source libraries. These libraries and their licenses can be found 
+          The Weatherer is licensed under the <a href="/LICENSE">MIT License</a>. We also use several open-source libraries. These libraries and their licenses can be found 
           <a href="/ThirdPartyNotices.txt">here</a>.</p>
       </form>
     `;
