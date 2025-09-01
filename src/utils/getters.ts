@@ -45,6 +45,6 @@ export const getMetricName =
   (thisAverageYears: () => number) => (metric: string, location: string) =>
     `daily ${metric
       .replaceAll('_', ' ')
-      .toLocaleLowerCase()} in ${location} (${thisAverageYears()}-year moving average) (${getUnit(
+      .toLocaleLowerCase()} in ${location} (${thisAverageYears()}-year average) (${getUnit(
       metric
     )})`;

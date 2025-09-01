@@ -178,7 +178,7 @@ export class WeatherForm extends LitElement {
         </div>
         <div class="form-input">
           <sp-field-label for="average-years"
-            >Years to Include in Moving Average</sp-field-label
+            >Years to Include in Each Average</sp-field-label
           >
           <sp-number-field
             id="average-years"
@@ -228,9 +228,7 @@ export class WeatherForm extends LitElement {
           <sp-button type="submit">Submit</sp-button>
         </div>
         <div class="fine-print">
-          All metrics are calculated per-day, and each day in the specified
-          moving average range in years will be averaged to produce the final
-          result.
+          All metrics are calculated per-day, and for each day, the number of daily records corresponding to the number of years specified to average, ending on the date in question, will be averaged to create the final result.
         </div>
         <p>The data is provided by <a href=https://open-meteo.com>Open-Meteo</a> and the 
           <a href=https://climate.copernicus.eu/>Copernicus Climate Change Service</a>.
